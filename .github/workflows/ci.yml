@@ -40,7 +40,9 @@ jobs:
                 "docker pull ${{ secrets.ECR_REPO_URL_NOTIFICACIONES }}:latest",
                 "docker stop ms-notificaciones || true",
                 "docker rm ms-notificaciones || true",
-                "docker run -d --name ms-notificaciones -p 8086:8086 -e JAVA_OPTS=\"-Xmx250m\" --memory=\"350m\" -e DB_URL=\"${{ secrets.DB_URL }}\" -e DB_USERNAME=\"${{ secrets.DB_USERNAME }}\" -e DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\" -e EUREKA_URL=\"${{ secrets.EUREKA_URL }}\" ${{ secrets.ECR_REPO_URL_NOTIFICACIONES }}:latest"
+                "TOKEN=$(curl -s -X PUT \"http://169.254.169.254/latest/api/token\" -H \"X-aws-ec2-metadata-token-ttl-seconds: 21600\")",
+                "export EC2_IP=$(curl -s -H \"X-aws-ec2-metadata-token: $TOKEN\" http://169.254.169.254/latest/meta-data/local-ipv4)",
+                "docker run -d --name ms-notificaciones -p 8086:8086 -e JAVA_OPTS=\"-Xmx250m\" --memory=\"350m\" -e DB_URL=\"${{ secrets.DB_URL }}\" -e DB_USERNAME=\"${{ secrets.DB_USERNAME }}\" -e DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\" -e EUREKA_URL=\"${{ secrets.EUREKA_URL }}\" -e EUREKA_INSTANCE_PREFER_IP_ADDRESS=\"true\" -e EUREKA_INSTANCE_IP_ADDRESS=\"$EC2_IP\" ${{ secrets.ECR_REPO_URL_NOTIFICACIONES }}:latest"
               ]
             }' \
             --query "Command.CommandId" \
