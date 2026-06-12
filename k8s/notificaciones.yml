@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notificaciones-deployment
+  labels:
+    app: ms-notificaciones
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-notificaciones
+  template:
+    metadata:
+      labels:
+        app: ms-notificaciones
+    spec:
+      containers:
+      - name: ms-notificaciones
+        image: 782424855823.dkr.ecr.us-east-1.amazonaws.com/ms-notificaciones:${IMAGE_TAG}
+        ports:
+        - containerPort: 8086
+        env:
+        - name: DB_URL
+          value: "jdbc:postgresql://sanosdb-service:5432/db_notificaciones"
+        - name: DB_USERNAME
+          value: "admin"
+        - name: DB_PASSWORD
+          value: "admin"
+        - name: EUREKA_URL
+          value: "http://eureka-service:8761/eureka/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notificaciones-service
+spec:
+  type: ClusterIP
+  selector:
+    app: ms-notificaciones
+  ports:
+    - protocol: TCP
+      port: 8086
+      targetPort: 8086
