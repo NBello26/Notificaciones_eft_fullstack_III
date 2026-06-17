@@ -16,16 +16,22 @@ spec:
     spec:
       containers:
       - name: ms-notificaciones
-        image: 782424855823.dkr.ecr.us-east-1.amazonaws.com/ms-notificaciones:${IMAGE_TAG}
+        image: 085985863834.dkr.ecr.us-east-1.amazonaws.com/ms-notificaciones:${IMAGE_TAG}
         ports:
         - containerPort: 8086
         env:
         - name: DB_URL
-          value: "jdbc:postgresql://sanosdb-service:5432/db_notificaciones"
+          value: "jdbc:postgresql://sanosdb-service:5432/db_mascotas"
         - name: DB_USERNAME
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: db-username
         - name: DB_PASSWORD
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: db-password
         - name: EUREKA_URL
           value: "http://eureka-service:8761/eureka/"
 ---
