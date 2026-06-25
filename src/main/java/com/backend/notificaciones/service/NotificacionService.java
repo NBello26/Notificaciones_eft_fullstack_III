@@ -90,7 +90,7 @@ public class NotificacionService {
     }
 
     // LISTENER DE RABBITMQ - RECIBE EVENTOS ASÍNCRONOS
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_NOTIFICACIONES)
+    @RabbitListener(queuesToDeclare = @Queue(name = RabbitMQConfig.QUEUE_NOTIFICACIONES, durable = "true"))
     public void procesarReporteMascotaRabbitMQ(MascotaReportadaEvent evento) {
         System.out.println("=========================================================");
         System.out.println("¡RABBITMQ: NUEVO REPORTE DE MASCOTA RECIBIDO!");
