@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: ms-notificaciones
-        image: 085985863834.dkr.ecr.us-east-1.amazonaws.com/ms-notificaciones:${IMAGE_TAG}
+        image: 871767013014.dkr.ecr.us-east-1.amazonaws.com/ms-notificaciones:${IMAGE_TAG}
         ports:
         - containerPort: 8086
         env:
